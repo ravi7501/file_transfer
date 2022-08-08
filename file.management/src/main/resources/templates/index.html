@@ -11,7 +11,60 @@
 
 
 <style >
+table {
 
+  font-family: arial, sans-serif;
+
+  border-collapse: collapse;
+
+  width: 100%;
+
+}
+
+
+td, th {
+
+  border: 1px solid #dddddd;
+
+  text-align: left;
+
+  padding: 8px;
+
+}
+
+
+tr:nth-child(even) {
+
+  background-color: #dddddd;
+
+}
+.container{
+  background-color: #D6EEEE;
+}
+
+.loadingOverlay {
+    display:    none;
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 ) 
+                url('C:\Users\Administrator\Downloads\hindustani-bhau-ruko-zara.gif') 
+                50% 50%
+                no-repeat;
+}
+.btnSend {
+  bbackground-color: red; /* Green */
+  order: darkblue;
+  color: black;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+}
 </style>
 
 
@@ -21,79 +74,73 @@
 
 
 <body style="background: darkcyan;">
-<label >Choose Bank name </label>
 
-<select name="b_name" id="b_name">
-  <option value="all">ALL</option>
-  <option value="RSCB0000%">APEX</option>
-  <option value="RSCB0011%">AJMER</option>
-  <option value="RSCB0012%">ALWAR</option>
-  <option value="RSCB0013%">BANSWARA</option>
-  <option value="RSCB0039%">BARAN</option>
-  <option value="RSCB0014%">BARMER</option>
-  <option value="RSCB0015%">BHARATPUR</option>
-  <option value="RSCB0016%">BHILWARA</option>
-  <option value="RSCB0017%">BIKANER</option>
-  <option value="RSCB0018%">BUNDI</option>
-  <option value="RSCB0019%">CHITTAURGARH</option>
-  <option value="RSCB0020%">CHURU</option>
-  <option value="RSCB0037%">DAUSA</option>
-  <option value="RSCB0021%">DUNGARPUR</option>
-  <option value="RSCB0033%">GANGANAGAR</option>
-  <option value="RSCB0038%">HANUMANGARH</option>
-  <option value="RSCB0036%">JAISALMER</option>
-  <option value="RSCB0022%">JAIPUR</option>
-  <option value="RSCB0023%">JALOR</option>
-  <option value="RSCB0024%">JHALAWAR</option>
-  <option value="RSCB0025%">JHUNJHUNU</option>
-  <option value="RSCB0026%">JODHPUR</option>
-  <option value="RSCB0027%">KOTA</option>
-  <option value="RSCB0028%">NAGAUR</option>
-  <option value="RSCB0029%">PALI</option>
-  <option value="RSCB0030%">SAWAI MADHOPUR</option>
-  <option value="RSCB0031%">SIKAR</option>
-  <option value="RSCB0032%">SIROHI</option>
-  <option value="RSCB0034%">TONK</option>
-  <option value="RSCB0035%">UDAIPUR</option>
-  
-</select>
+<h1 style="margin-bottom: 15px; color: white; text-align: center;"> PENDING FILES</h1>
 
 
+<div class="container" style="margin: 10px; ">
+<table id="myTable"  >
 
-Done
-
-
-<table id= neft_incoming>
-<thead>
+  <thead>
     <tr>
-    
-      <th> Status</th>
-      <th> Count </th>
-      
+      <th style="background-color: #B5F53E"></th>       
+      <th  style="background-color: #B5F53E" scope="col">UTR NO</th>
+      <th   style="background-color: #B5F53E" scope="col">MSG TYPE</th>
+      <th  style="background-color: #B5F53E"  scope="col">INIT DATE</th>
+      <th  style="background-color: #B5F53E" scope="col">AMOUNT</th>
+      <th   style="background-color: #B5F53E" scope="col">STATUS</th>
+      <th   style="background-color: #B5F53E" scope="col">PREVEOUS STATUSES</th>
+      <th  style="background-color: #B5F53E"  scope="col">LAST MODIFIED TIME</th>
+      <th  style="background-color: #B5F53E"  scope="col">PENDING TIME</th>
+      <th style="background-color: #B5F53E" scope="col">Send</th>
     </tr>
-</thead>
- <tbody>
-    <tr  th:each="neftout : ${neftout}">
-              <td th:text="${neftout.status}"></td>
-              <td th:text="${neftout.count}"></td>
-              
+  </thead>
+  <tbody>
+    <tr  th:each="str : ${str}">
+              <td></td>
+              <td class="ravi" th:text="${str.UTR_NO}"></td>
+              <td th:text="${str.MSG_TYPE}"></td>
+              <td th:text="${str.INIT_DATE}"></td>
+              <td th:text="${str.AMOUNT}"></td>
+              <td th:text="${str.STATUS}"></td>
+              <td th:text="${str.PREV_STATUSES}"></td>
+              <td th:text="${str.LAST_MOD_TIME}"></td>
+              <td th:text="${str.PENDING_TIME}"></td>
+              <td> <input  class="btnSelect" type="checkbox" /></td>
+             
             </tr>
   </tbody>
 </table>
+<div class="loadingOverlay">
+</div>
 
+ 
+
+<button  class="btnSend" style="text-align: center; align-items: center; "> Send To Server
+    </button>
+</div>
 <script>
 //making array of utr_no
+var array = new Array();
 
-$(document).ready(function() {
-  $('#b_name').on('change', function() {
-    var string = $('#b_name').val()
-    alert(string);
-    
-    $.ajax({
+$(document).ready(function(){
+ 
+//code to read selected table row cell data (values).  
+$("#myTable").on('click', '.btnSelect', function() {
+	
+	 var currentRow=$(this).closest("tr");
+     var col2=currentRow.find("td:eq(1)").text();
+     var data=col2;
+     array.push(data);
+  });
+$(".btnSend").on('click',function(){
+	$('.loadingOverlay').show();
+	
+	$.ajax({
 	    type : "POST",
-	    url : "/index",
+	    url : "/file",
 	    data : {
-	        string: string//notice that "myArray" matches the value for @RequestParam
+	        myArray: array //notice that "myArray" matches the value for @RequestParam
 	                   //on the Java side
 	    },
 
@@ -106,9 +153,12 @@ $(document).ready(function() {
 	       alert('Error: \n please select row to send' + e);
 	    },
 	});
-    
-  });
+
 });
+  });
+  
+  
+
 
 </script>
 
